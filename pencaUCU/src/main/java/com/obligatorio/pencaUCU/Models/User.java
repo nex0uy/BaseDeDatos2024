@@ -11,7 +11,6 @@ public class User {
     private int roleId;
     private String career;
 
-    // Constructors
     public User() {}
 
     public User(String name, String email, String password, Timestamp registrationDate, int roleId, String career) {
