@@ -23,6 +23,8 @@ public class PredictionDataAccess {
     private final String UPDATE_PREDICTION_SQL = "UPDATE predictions SET user_id = ?, match_id = ?, team_one_score = ?, team_two_score = ?, points = ? WHERE id = ?";
     private final String DELETE_PREDICTION_SQL = "DELETE FROM predictions WHERE id = ?";
     private final String EXISTS_PREDICTION_SQL = "SELECT COUNT(*) FROM predictions WHERE user_id = ? AND match_id = ?";
+    private final String UPDATE_POINTS_PREDICTION_SQL = "UPDATE predictions SET points = ? WHERE id = ?";
+    private final String SELECT_PREDICTIONS_BY_MATCH_SQL = "SELECT * FROM predictions WHERE match_id = ?";
 
 
     public void save(Prediction prediction) {
@@ -42,6 +44,10 @@ public class PredictionDataAccess {
         return jdbcTemplate.query(SELECT_ALL_PREDICTIONS_SQL, new PredictionRowMapper());
     }
 
+    public List<Prediction> findByMatchId(int matchId) {
+        return jdbcTemplate.query(SELECT_PREDICTIONS_BY_MATCH_SQL, new PredictionRowMapper(), matchId);
+    }
+
     public void update(Prediction prediction) {
         jdbcTemplate.update(UPDATE_PREDICTION_SQL,
                 prediction.getUserId(),
@@ -50,6 +56,10 @@ public class PredictionDataAccess {
                 prediction.getTeamTwoScore(),
                 prediction.getPoints(),
                 prediction.getId());
+    }
+
+    public void updatePoints(int id, int points) {
+        jdbcTemplate.update(UPDATE_POINTS_PREDICTION_SQL, points, id);
     }
 
     public void delete(int id) {
