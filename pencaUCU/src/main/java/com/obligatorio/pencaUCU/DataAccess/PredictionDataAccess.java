@@ -22,6 +22,8 @@ public class PredictionDataAccess {
     private final String SELECT_ALL_PREDICTIONS_SQL = "SELECT * FROM predictions";
     private final String UPDATE_PREDICTION_SQL = "UPDATE predictions SET user_id = ?, match_id = ?, team_one_score = ?, team_two_score = ?, points = ? WHERE id = ?";
     private final String DELETE_PREDICTION_SQL = "DELETE FROM predictions WHERE id = ?";
+    private final String EXISTS_PREDICTION_SQL = "SELECT COUNT(*) FROM predictions WHERE user_id = ? AND match_id = ?";
+
 
     public void save(Prediction prediction) {
         jdbcTemplate.update(INSERT_PREDICTION_SQL,
@@ -54,6 +56,12 @@ public class PredictionDataAccess {
         jdbcTemplate.update(DELETE_PREDICTION_SQL, id);
     }
 
+
+    public boolean existsByUserIdAndMatchId(int userId, int matchId) {
+        Integer count = jdbcTemplate.queryForObject(EXISTS_PREDICTION_SQL, Integer.class, userId, matchId);
+        return count != null && count > 0;
+    }
+    
     private static final class PredictionRowMapper implements RowMapper<Prediction> {
         @Override
         public Prediction mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {

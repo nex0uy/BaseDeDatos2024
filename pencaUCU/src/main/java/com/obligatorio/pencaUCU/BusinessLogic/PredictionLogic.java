@@ -22,8 +22,12 @@ public class PredictionLogic {
 
 
     public void savePrediction(Prediction prediction) {
+        if (predictionDataAccess.existsByUserIdAndMatchId(prediction.getUserId(), prediction.getMatchId())) {
+            throw new IllegalArgumentException("Ya realizaste una prediccion para este partido!");
+        }
         Match match = matchDataAccess.findById(prediction.getMatchId());
         LocalDateTime matchDateTime = match.getDate().toLocalDateTime();
+
         if (LocalDateTime.now().isAfter(matchDateTime.minusHours(1))) {
             throw new IllegalArgumentException("Las predicciones solo pueden realizarse una hora antes del partido!");
         }
