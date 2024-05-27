@@ -7,6 +7,7 @@ public class FinalPredictionDTO {
     private int userId;
     private int winningTeamId;
     private int runnerUpTeamId;
+    private int points;
 
     // Constructors
     public FinalPredictionDTO() {}
@@ -16,6 +17,7 @@ public class FinalPredictionDTO {
         this.userId = finalPrediction.getUserId();
         this.winningTeamId = finalPrediction.getWinningTeamId();
         this.runnerUpTeamId = finalPrediction.getRunnerUpTeamId();
+        this.points = finalPrediction.getPoints();
     }
 
     // Getters and Setters
@@ -49,5 +51,13 @@ public class FinalPredictionDTO {
 
     public void setRunnerUpTeamId(int runnerUpTeamId) {
         this.runnerUpTeamId = runnerUpTeamId;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 }

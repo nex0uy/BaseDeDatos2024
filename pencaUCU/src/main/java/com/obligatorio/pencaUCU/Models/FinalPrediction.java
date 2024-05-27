@@ -5,6 +5,7 @@ public class FinalPrediction {
     private int userId;
     private int winningTeamId;
     private int runnerUpTeamId;
+    private int points;
 
     // Constructors
     public FinalPrediction() {}
@@ -13,6 +14,7 @@ public class FinalPrediction {
         this.userId = userId;
         this.winningTeamId = winningTeamId;
         this.runnerUpTeamId = runnerUpTeamId;
+        this.points = 0; 
     }
 
     // Getters and Setters
@@ -46,5 +48,13 @@ public class FinalPrediction {
 
     public void setRunnerUpTeamId(int runnerUpTeamId) {
         this.runnerUpTeamId = runnerUpTeamId;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 }

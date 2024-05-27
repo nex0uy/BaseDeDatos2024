@@ -14,6 +14,9 @@ public class FinalPredictionLogic {
     private FinalPredictionDataAccess finalPredictionDataAccess;
 
     public void saveFinalPrediction(FinalPrediction finalPrediction) {
+        if (finalPredictionDataAccess.existsByUserId(finalPrediction.getUserId())) {
+            throw new IllegalArgumentException("El usuario ya agrego una prediccion final!");
+        }
         finalPredictionDataAccess.save(finalPrediction);
     }
 
@@ -25,11 +28,17 @@ public class FinalPredictionLogic {
         return finalPredictionDataAccess.findAll();
     }
 
-    public void updateFinalPrediction(FinalPrediction finalPrediction) {
-        finalPredictionDataAccess.update(finalPrediction);
-    }
-
-    public void deleteFinalPrediction(int id) {
-        finalPredictionDataAccess.delete(id);
+    public void calculateFinalPredictionPoints(int championTeamId, int runnerUpTeamId) {
+        List<FinalPrediction> finalPredictions = finalPredictionDataAccess.findAll();
+        for (FinalPrediction finalPrediction : finalPredictions) {
+            int points = 0;
+            if (finalPrediction.getWinningTeamId() == championTeamId) {
+                points += 10; // Campeon
+            }
+            if (finalPrediction.getRunnerUpTeamId() == runnerUpTeamId) {
+                points += 5; // Sub-Campeon
+            }
+            finalPredictionDataAccess.updatePoints(finalPrediction.getId(), points);
+        }
     }
 }

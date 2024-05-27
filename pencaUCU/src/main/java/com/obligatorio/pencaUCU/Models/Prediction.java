@@ -16,7 +16,7 @@ public class Prediction {
         this.matchId = matchId;
         this.teamOneScore = teamOneScore;
         this.teamTwoScore = teamTwoScore;
-        this.points = 0; // Default points to 0
+        this.points = 0; 
     }
 
     // Getters and Setters

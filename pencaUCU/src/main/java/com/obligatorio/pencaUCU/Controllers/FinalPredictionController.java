@@ -18,13 +18,17 @@ public class FinalPredictionController {
     private FinalPredictionLogic finalPredictionLogic;
 
     @PostMapping
-    public ResponseEntity<Void> createFinalPrediction(@RequestBody FinalPredictionDTO finalPredictionDTO) {
-        FinalPrediction finalPrediction = new FinalPrediction(
-                finalPredictionDTO.getUserId(),
-                finalPredictionDTO.getWinningTeamId(),
-                finalPredictionDTO.getRunnerUpTeamId());
-        finalPredictionLogic.saveFinalPrediction(finalPrediction);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> createFinalPrediction(@RequestBody FinalPredictionDTO finalPredictionDTO) {
+        try {
+            FinalPrediction finalPrediction = new FinalPrediction(
+                    finalPredictionDTO.getUserId(),
+                    finalPredictionDTO.getWinningTeamId(),
+                    finalPredictionDTO.getRunnerUpTeamId());
+            finalPredictionLogic.saveFinalPrediction(finalPrediction);
+            return ResponseEntity.ok("Prediccion final creada con exito!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
@@ -39,22 +43,5 @@ public class FinalPredictionController {
         List<FinalPrediction> finalPredictions = finalPredictionLogic.getAllFinalPredictions();
         List<FinalPredictionDTO> finalPredictionDTOs = finalPredictions.stream().map(FinalPredictionDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok(finalPredictionDTOs);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateFinalPrediction(@PathVariable int id, @RequestBody FinalPredictionDTO finalPredictionDTO) {
-        FinalPrediction finalPrediction = new FinalPrediction(
-                finalPredictionDTO.getUserId(),
-                finalPredictionDTO.getWinningTeamId(),
-                finalPredictionDTO.getRunnerUpTeamId());
-        finalPrediction.setId(id);
-        finalPredictionLogic.updateFinalPrediction(finalPrediction);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFinalPrediction(@PathVariable int id) {
-        finalPredictionLogic.deleteFinalPrediction(id);
-        return ResponseEntity.ok().build();
     }
 }
