@@ -65,4 +65,11 @@ public class MatchController {
         matchLogic.deleteMatch(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/fixture")
+    public ResponseEntity<List<MatchDTO>> getFixture() {
+        List<Match> matches = matchLogic.getAllMatches();
+        List<MatchDTO> matchDTOs = matches.stream().map(MatchDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok(matchDTOs);
+    }
 }
