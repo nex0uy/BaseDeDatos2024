@@ -59,8 +59,4 @@ public class PredictionLogic {
     public List<Prediction> getPredictionsByUserId(int userId) {
         return predictionDataAccess.findByUserId(userId);
     }
-
-    public int calculateTotalPointsByUserId(int userId) {
-        return predictionDataAccess.calculateTotalPointsByUserId(userId);
-    }
 }

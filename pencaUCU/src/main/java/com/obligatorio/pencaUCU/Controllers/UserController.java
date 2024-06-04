@@ -1,6 +1,5 @@
 package com.obligatorio.pencaUCU.Controllers;
 
-import com.obligatorio.pencaUCU.BusinessLogic.PredictionLogic;
 import com.obligatorio.pencaUCU.BusinessLogic.UserLogic;
 import com.obligatorio.pencaUCU.Models.User;
 
@@ -17,9 +16,6 @@ public class UserController {
 
     @Autowired
     private UserLogic userLogic;
-
-    @Autowired
-    private PredictionLogic predictionLogic;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
@@ -40,7 +36,7 @@ public class UserController {
 
     @GetMapping("/points/{userId}")
     public ResponseEntity<Map<String, Object>> getUserPoints(@PathVariable int userId) {
-        int points = predictionLogic.calculateTotalPointsByUserId(userId);
+        int points = userLogic.calculateTotalPointsByUserId(userId);
         return ResponseEntity.ok(Map.of("userId", userId, "points", points));
     }
 

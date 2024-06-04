@@ -30,6 +30,9 @@ public class FinalPredictionDataAccess {
     private final String SELECT_FINAL_PREDICTION_POINTS_BY_USER_SQL = "SELECT user_id, SUM(points) AS total_points " +
             "FROM final_predictions " +
             "GROUP BY user_id";
+        private final String CALCULATE_TOTAL_POINTS_BY_USER_SQL = "SELECT SUM(points) FROM final_predictions WHERE user_id = ?";
+
+    
 
     public void save(FinalPrediction finalPrediction) {
         jdbcTemplate.update(INSERT_FINAL_PREDICTION_SQL,
@@ -76,6 +79,11 @@ public class FinalPredictionDataAccess {
     public List<Map<String, Object>> findFinalPredictionPointsByUser() {
         return jdbcTemplate.queryForList(SELECT_FINAL_PREDICTION_POINTS_BY_USER_SQL);
     }
+
+    public int calculateTotalPointsByUserId(int userId) {
+        return jdbcTemplate.queryForObject(CALCULATE_TOTAL_POINTS_BY_USER_SQL, Integer.class, userId);
+    }
+
 
     private static final class CareerPointsRowMapper implements RowMapper<Map<String, Object>> {
         @Override
