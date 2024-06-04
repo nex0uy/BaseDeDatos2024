@@ -1,7 +1,8 @@
 package com.obligatorio.pencaUCU.BusinessLogic;
 
-import com.obligatorio.pencaUCU.Models.User;
 import com.obligatorio.pencaUCU.DataAccess.UserDataAccess;
+import com.obligatorio.pencaUCU.Models.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,4 +25,5 @@ public class UserLogic {
     public List<User> getAllUsers() {
         return userDataAccess.findAll();
     }
+
 }

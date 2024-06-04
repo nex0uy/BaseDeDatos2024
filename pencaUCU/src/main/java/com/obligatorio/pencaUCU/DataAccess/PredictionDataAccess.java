@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class PredictionDataAccess {
@@ -25,7 +26,15 @@ public class PredictionDataAccess {
     private final String EXISTS_PREDICTION_SQL = "SELECT COUNT(*) FROM predictions WHERE user_id = ? AND match_id = ?";
     private final String UPDATE_POINTS_PREDICTION_SQL = "UPDATE predictions SET points = ? WHERE id = ?";
     private final String SELECT_PREDICTIONS_BY_MATCH_SQL = "SELECT * FROM predictions WHERE match_id = ?";
-
+    private final String SELECT_PREDICTION_POINTS_BY_CAREER_SQL = "SELECT u.career, SUM(p.points) AS total_points, COUNT(p.id) AS total_predictions " +
+            "FROM predictions p " +
+            "JOIN users u ON p.user_id = u.id " +
+            "GROUP BY u.career";
+    private final String SELECT_PREDICTION_POINTS_BY_USER_SQL = "SELECT user_id, SUM(points) AS total_points " +
+            "FROM predictions " +
+            "GROUP BY user_id";
+    private final String SELECT_PREDICTIONS_BY_USER_SQL = "SELECT * FROM predictions WHERE user_id = ?";
+    private final String CALCULATE_TOTAL_POINTS_BY_USER_SQL = "SELECT SUM(points) FROM predictions WHERE user_id = ?";
 
     public void save(Prediction prediction) {
         jdbcTemplate.update(INSERT_PREDICTION_SQL,
@@ -66,12 +75,27 @@ public class PredictionDataAccess {
         jdbcTemplate.update(DELETE_PREDICTION_SQL, id);
     }
 
-
     public boolean existsByUserIdAndMatchId(int userId, int matchId) {
         Integer count = jdbcTemplate.queryForObject(EXISTS_PREDICTION_SQL, Integer.class, userId, matchId);
         return count != null && count > 0;
     }
+
+    public List<Map<String, Object>> findPredictionPointsByCareer() {
+        return jdbcTemplate.queryForList(SELECT_PREDICTION_POINTS_BY_CAREER_SQL);
+    }
     
+    public List<Map<String, Object>> findPredictionPointsByUser() {
+        return jdbcTemplate.queryForList(SELECT_PREDICTION_POINTS_BY_USER_SQL);
+    }
+
+    public List<Prediction> findByUserId(int userId) {
+        return jdbcTemplate.query(SELECT_PREDICTIONS_BY_USER_SQL, new PredictionRowMapper(), userId);
+    }
+
+    public int calculateTotalPointsByUserId(int userId) {
+        return jdbcTemplate.queryForObject(CALCULATE_TOTAL_POINTS_BY_USER_SQL, Integer.class, userId);
+    }
+
     private static final class PredictionRowMapper implements RowMapper<Prediction> {
         @Override
         public Prediction mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {

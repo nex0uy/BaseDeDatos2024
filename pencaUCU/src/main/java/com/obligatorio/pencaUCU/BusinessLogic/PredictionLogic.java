@@ -4,6 +4,7 @@ import com.obligatorio.pencaUCU.DataAccess.MatchDataAccess;
 import com.obligatorio.pencaUCU.DataAccess.PredictionDataAccess;
 import com.obligatorio.pencaUCU.Models.Match;
 import com.obligatorio.pencaUCU.Models.Prediction;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,5 +54,13 @@ public class PredictionLogic {
 
     public void deletePrediction(int id) {
         predictionDataAccess.delete(id);
+    }
+
+    public List<Prediction> getPredictionsByUserId(int userId) {
+        return predictionDataAccess.findByUserId(userId);
+    }
+
+    public int calculateTotalPointsByUserId(int userId) {
+        return predictionDataAccess.calculateTotalPointsByUserId(userId);
     }
 }
