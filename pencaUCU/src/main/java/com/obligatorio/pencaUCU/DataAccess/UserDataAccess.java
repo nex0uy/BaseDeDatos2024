@@ -42,7 +42,7 @@ public class UserDataAccess {
     }
 
     public List<User> findAll() {
-        return jdbcTemplate.query(SELECT_ALL_USERS_SQL, new UserRowMapper());
+         return jdbcTemplate.query(SELECT_ALL_USERS_SQL, new UserRowMapper());
     }
 
     public List<Map<String, Object>> findAllWithPoints() {
