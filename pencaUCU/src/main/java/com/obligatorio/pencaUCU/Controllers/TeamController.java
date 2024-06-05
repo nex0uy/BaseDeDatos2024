@@ -5,6 +5,7 @@ import com.obligatorio.pencaUCU.Dtos.TeamDTO;
 import com.obligatorio.pencaUCU.Models.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class TeamController {
     private TeamLogic teamLogic;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> createTeam(@RequestBody TeamDTO teamDTO) {
         Team team = new Team(teamDTO.getName());
         teamLogic.saveTeam(team);
@@ -39,6 +41,7 @@ public class TeamController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> updateTeam(@PathVariable int id, @RequestBody TeamDTO teamDTO) {
         Team team = new Team(teamDTO.getName());
         team.setId(id);
@@ -47,6 +50,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteTeam(@PathVariable int id) {
         teamLogic.deleteTeam(id);
         return ResponseEntity.ok().build();

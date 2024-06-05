@@ -5,6 +5,7 @@ import com.obligatorio.pencaUCU.Dtos.MatchDTO;
 import com.obligatorio.pencaUCU.Models.Match;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class MatchController {
     private MatchLogic matchLogic;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> createMatch(@RequestBody MatchDTO matchDTO) {
         Match match = new Match(
                 matchDTO.getDate(),
@@ -43,6 +45,7 @@ public class MatchController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> updateMatch(@PathVariable int id, @RequestBody MatchDTO matchDTO) {
         Match match = new Match(
                 matchDTO.getDate(),
@@ -57,8 +60,16 @@ public class MatchController {
     }
     
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteMatch(@PathVariable int id) {
         matchLogic.deleteMatch(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/fixture")
+    public ResponseEntity<List<MatchDTO>> getFixture() {
+        List<Match> matches = matchLogic.getAllMatches();
+        List<MatchDTO> matchDTOs = matches.stream().map(MatchDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok(matchDTOs);
     }
 }

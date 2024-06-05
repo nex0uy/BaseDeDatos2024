@@ -1,14 +1,14 @@
 package com.obligatorio.pencaUCU.Controllers;
 
 import com.obligatorio.pencaUCU.BusinessLogic.UserLogic;
-import com.obligatorio.pencaUCU.Dtos.UserDTO;
 import com.obligatorio.pencaUCU.Models.User;
+
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -17,24 +17,27 @@ public class UserController {
     @Autowired
     private UserLogic userLogic;
 
-    @PostMapping
-    public ResponseEntity<Void> createUser(@RequestBody UserDTO userDTO) {
-        User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getPassword(), userDTO.getRegistrationDate(), userDTO.getRoleId(), userDTO.getCareer());
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
+        user.setRoleId(1); // Asumiendo que el rol USER tiene el id 1
         userLogic.saveUser(user);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("User registered successfully");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable int id) {
-        User user = userLogic.getUserById(id);
-        UserDTO userDTO = new UserDTO(user);
-        return ResponseEntity.ok(userDTO);
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
+        return ResponseEntity.ok(userLogic.getUserById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<User> users = userLogic.getAllUsers();
-        List<UserDTO> userDTOs = users.stream().map(UserDTO::new).collect(Collectors.toList());
-        return ResponseEntity.ok(userDTOs);
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userLogic.getAllUsers());
     }
+
+    @GetMapping("/points/{userId}")
+    public ResponseEntity<Map<String, Object>> getUserPoints(@PathVariable int userId) {
+        int points = userLogic.calculateTotalPointsByUserId(userId);
+        return ResponseEntity.ok(Map.of("userId", userId, "points", points));
+    }
+
 }
