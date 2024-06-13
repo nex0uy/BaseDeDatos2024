@@ -27,6 +27,8 @@ public class UserDataAccess {
             "LEFT JOIN predictions p ON u.id = p.user_id " +
             "LEFT JOIN final_predictions fp ON u.id = fp.user_id " +
             "GROUP BY u.id, u.name, u.email, u.registration_date, u.role_id, u.career";
+    private final String SELECT_USER_BY_EMAIL_SQL = "SELECT * FROM users WHERE email = ?";
+
 
     public void save(User user) {
         jdbcTemplate.update(INSERT_USER_SQL,
@@ -47,6 +49,11 @@ public class UserDataAccess {
 
     public List<Map<String, Object>> findAllWithPoints() {
         return jdbcTemplate.queryForList(SELECT_USERS_WITH_POINTS_SQL);
+    }
+
+    public User findByEmail(String email) {
+        List<User> users = jdbcTemplate.query(SELECT_USER_BY_EMAIL_SQL, new UserRowMapper(), email);
+        return users.isEmpty() ? null : users.get(0);
     }
 
     private static final class UserRowMapper implements RowMapper<User> {
