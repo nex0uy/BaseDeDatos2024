@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  Container,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+  Link as MuiLink
+} from '@mui/material';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import FinalPrediction from '../components/FinalPrediction/FinalPrediction';
 import axios from 'axios';
-import { 
-  Container, 
-  Form, 
-  FormGroup, 
-  Label, 
-  Input, 
-  Button, 
-  Title 
-} from '../assets/component-styles/formStyles';
+import FinalPrediction from '../components/FinalPrediction/FinalPrediction';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -36,61 +37,98 @@ const Register = () => {
             runnerUpTeamId: finalPrediction.runnerUp,
           });
         } catch (error) {
-          console.error('Error en la prediccion final!:', error);
-          throw new Error('Prediccion Final fallo!');
+          console.error('Error en la predicción final:', error);
+          throw new Error('Predicción Final falló');
         }
       } else {
-        throw new Error('Registro de usuario fallo!');
+        throw new Error('Registro de usuario falló');
       }
 
       navigate('/login');
     } catch (error) {
       console.error(error);
-      alert('No fue posible realizar el registro!');
+      alert('No fue posible realizar el registro');
     }
   };
+
   return (
-    <Container>
-      <Form>
-        <Title>Registrarse</Title>
-        <form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label>Nombre</Label>
-            <Input
-              type="text"
+    <Container maxWidth="xs" sx={{ mt: 8 }}>
+      <Card>
+        <CardContent>
+          <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Logo
+            </Typography>
+          </Box>
+          <Typography variant="h5" component="h2" gutterBottom>
+            Crear Cuenta
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              label="Nombre"
+              name="name"
+              autoComplete="name"
+              autoFocus
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-          </FormGroup>
-          <FormGroup>
-            <Label>Email</Label>
-            <Input
-              type="email"
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-          </FormGroup>
-          <FormGroup>
-            <Label>Contraseña</Label>
-            <Input
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
               type="password"
+              id="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-          </FormGroup>
-          <FormGroup>
-            <Label>Carrera</Label>
-            <Input
-              type="text"
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="career"
+              label="Carrera"
+              name="career"
+              autoComplete="career"
               value={career}
               onChange={(e) => setCareer(e.target.value)}
             />
-          </FormGroup>
-          <FinalPrediction onPredictionChange={setFinalPrediction} />
-          <Button type="submit">Registrar</Button>
-        </form>
-      </Form>
+
+            <FinalPrediction onPredictionChange={setFinalPrediction} />
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Registrar
+            </Button>
+            <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+              ¿Ya tienes una cuenta? <MuiLink component={Link} to="/login">Inicia sesión aquí</MuiLink>
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
     </Container>
   );
 };
+
 export default Register;

@@ -6,7 +6,6 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import GlobalStyle from './assets/styles/GlobalStyle';
 
 
 const PrivateRoute = ({ children }) => {
@@ -17,11 +16,11 @@ const PrivateRoute = ({ children }) => {
 const App = () => {
   return (
     <AuthProvider>
-      <GlobalStyle />
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/" element={<Login />} />
           <Route
             path="/dashboard"
             element={

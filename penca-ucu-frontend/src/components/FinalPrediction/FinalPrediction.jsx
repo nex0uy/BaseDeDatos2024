@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FormGroup, Label, Select } from '../../assets/component-styles/FinalPrediction.styles';
+import { TextField, MenuItem } from '@mui/material';
 
 const FinalPrediction = ({ onPredictionChange }) => {
   const [teams, setTeams] = useState([]);
@@ -28,22 +28,42 @@ const FinalPrediction = ({ onPredictionChange }) => {
   }, [champion, runnerUp, onPredictionChange]);
 
   return (
-    <FormGroup>
-      <Label>Campeón</Label>
-      <Select value={champion} onChange={(e) => setChampion(e.target.value)}>
-        <option value="">Seleccionar Equipo</option>
-        {teams.map(team => (
-          <option key={team.id} value={team.id}>{team.name}</option>
+    <div>
+      <TextField
+        select
+        label="Campeón"
+        value={champion}
+        onChange={(e) => setChampion(e.target.value)}
+        fullWidth
+        margin="normal"
+      >
+        <MenuItem value="">
+          <em>Seleccionar Equipo</em>
+        </MenuItem>
+        {teams.map((team) => (
+          <MenuItem key={team.id} value={team.id}>
+            {team.name}
+          </MenuItem>
         ))}
-      </Select>
-      <Label>Subcampeón</Label>
-      <Select value={runnerUp} onChange={(e) => setRunnerUp(e.target.value)}>
-        <option value="">Seleccionar Equipo</option>
-        {teams.map(team => (
-          <option key={team.id} value={team.id}>{team.name}</option>
+      </TextField>
+      <TextField
+        select
+        label="Subcampeón"
+        value={runnerUp}
+        onChange={(e) => setRunnerUp(e.target.value)}
+        fullWidth
+        margin="normal"
+      >
+        <MenuItem value="">
+          <em>Seleccionar Equipo</em>
+        </MenuItem>
+        {teams.map((team) => (
+          <MenuItem key={team.id} value={team.id}>
+            {team.name}
+          </MenuItem>
         ))}
-      </Select>
-    </FormGroup>
+      </TextField>
+    </div>
   );
 };
 

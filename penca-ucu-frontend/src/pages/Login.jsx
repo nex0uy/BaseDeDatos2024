@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
+import {
+  Container,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+  Link as MuiLink
+} from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { 
-  Container, 
-  Form, 
-  FormGroup, 
-  Label, 
-  Input, 
-  Button, 
-  Title, 
-  RegisterLink 
-} from '../assets/component-styles/formStyles';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -29,32 +29,59 @@ const Login = () => {
   };
 
   return (
-    <Container>
-      <Form>
-        <Title>Iniciar Sesión</Title>
-        <form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label>Email</Label>
-            <Input
-              type="email"
+    <Container maxWidth="xs" sx={{ mt: 8 }}>
+      <Card>
+        <CardContent>
+          <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Logo
+            </Typography>
+          </Box>
+          <Typography variant="h5" component="h2" gutterBottom>
+            Iniciar Sesión
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
+              autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-          </FormGroup>
-          <FormGroup>
-            <Label>Contraseña</Label>
-            <Input
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
               type="password"
+              id="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-          </FormGroup>
-          <Button type="submit">Iniciar Sesión</Button>
-        </form>
-        <RegisterLink>
-          <Link to="/register">¿No tienes una cuenta? Regístrate aquí</Link>
-        </RegisterLink>
-      </Form>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Login
+            </Button>
+            <MuiLink component={Link} to="/forgot-password" variant="body2">
+              Forgot password?
+            </MuiLink>
+            <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+              ¿No tienes una cuenta? <MuiLink component={Link} to="/register">Regístrate aquí</MuiLink>
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
     </Container>
   );
 };
