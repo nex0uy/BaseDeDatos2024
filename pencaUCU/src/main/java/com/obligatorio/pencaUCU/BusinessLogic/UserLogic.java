@@ -5,7 +5,9 @@ import com.obligatorio.pencaUCU.DataAccess.PredictionDataAccess;
 import com.obligatorio.pencaUCU.DataAccess.UserDataAccess;
 import com.obligatorio.pencaUCU.Models.User;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +24,9 @@ public class UserLogic {
     @Autowired
     private FinalPredictionDataAccess finalPredictionDataAccess;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder; 
+
     public void saveUser(User user) {
         userDataAccess.save(user);
     }
@@ -32,6 +37,14 @@ public class UserLogic {
 
     public List<User> getAllUsers() {
         return userDataAccess.findAll();
+    }
+
+    public User findUserByEmail(String email) {
+        return userDataAccess.findByEmail(email);
+    }
+
+    public boolean passwordMatches(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
     public int calculateTotalPointsByUserId(int userId) {

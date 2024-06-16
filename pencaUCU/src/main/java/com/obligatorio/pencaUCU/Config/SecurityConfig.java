@@ -14,6 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,11 +34,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity in development
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/tournament/**").hasRole("ADMIN")
-                .requestMatchers("/api/users/**").permitAll()
+                .requestMatchers("/api/users/login", "/api/users/register", "/api/teams", "/api/finalPredictions").permitAll()
                 .requestMatchers("/api/predictions/**").hasRole("USER") 
-                .requestMatchers("/api/finalPredictions/**").hasRole("USER") 
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -43,8 +46,21 @@ public class SecurityConfig {
                 .passwordParameter("password")
                 .defaultSuccessUrl("/swagger-ui.html", true)
             )
-            .csrf(csrf -> csrf.disable()); // Disable CSRF for simplicity in development
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())); // Habilitar CORS
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:5173");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     @Bean
@@ -72,13 +88,13 @@ public class SecurityConfig {
                         public String mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
                             return rs.getString("nombre");
                         }
-                    }).stream().findFirst().orElseThrow(() -> new UsernameNotFoundException("Role not found"));
+                    }).stream().findFirst().orElseThrow(() -> new UsernameNotFoundException("Rol no encontrado!"));
                     return new CustomUserDetails(userId, username, password, Collections.singleton(() -> "ROLE_" + roleName.toUpperCase()));
                 }
             });
 
             if (users.isEmpty()) {
-                throw new UsernameNotFoundException("User not found");
+                throw new UsernameNotFoundException("Usuario no encontrado");
             }
 
             return users.get(0);
