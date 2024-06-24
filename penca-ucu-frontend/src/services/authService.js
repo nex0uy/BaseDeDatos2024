@@ -6,9 +6,10 @@ export const login = async (email, password) => {
   try {
     const response = await axios.post(`${API_URL}/users/login`, { email, password });
     if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data));
+      return response.data;
     }
-    return response.data;
   } catch (error) {
     throw new Error('Invalid email or password');
   }
@@ -17,22 +18,20 @@ export const login = async (email, password) => {
 export const register = async (name, email, password, career) => {
   try {
     const userData = { name, email, password, career };
-    console.log('Sending user data:', userData);
     const response = await axios.post(`${API_URL}/users/register`, userData);
-    console.log('Received response:', response.data);
-    if (response.data.userId) {
-      localStorage.setItem('user', JSON.stringify({ id: response.data.userId, email }));
-    }
-    return response.data; // Asegúrate de devolver la respuesta aquí
+    localStorage.setItem('user', JSON.stringify(response.data));
+    return response.data;
   } catch (error) {
     throw new Error('Registration failed');
   }
 };
 
 export const logout = () => {
+  localStorage.removeItem('token');
   localStorage.removeItem('user');
 };
 
 export const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem('user'));
+  const user = localStorage.getItem('user');
+  return user ? JSON.parse(user) : null;
 };

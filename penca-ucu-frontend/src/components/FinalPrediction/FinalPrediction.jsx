@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { TextField, MenuItem } from '@mui/material';
+import { TextField, MenuItem, Typography } from '@mui/material';
+import { fetchTeams } from '../../services/teamService';
 
 const FinalPrediction = ({ onPredictionChange }) => {
   const [teams, setTeams] = useState([]);
   const [champion, setChampion] = useState('');
   const [runnerUp, setRunnerUp] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchTeams = async () => {
+    const getTeams = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/teams');
-        if (Array.isArray(response.data)) {
-          setTeams(response.data);
-        } else {
-          console.error("Expected an array but got:", response.data);
-        }
+        const data = await fetchTeams();
+        setTeams(data);
       } catch (error) {
-        console.error("Error fetching teams:", error);
+        setError('Error fetching teams. Please try again later.');
       }
     };
-    fetchTeams();
+    getTeams();
   }, []);
 
   useEffect(() => {
@@ -29,6 +26,7 @@ const FinalPrediction = ({ onPredictionChange }) => {
 
   return (
     <div>
+      {error && <Typography color="error">{error}</Typography>}
       <TextField
         select
         label="Campeón"
