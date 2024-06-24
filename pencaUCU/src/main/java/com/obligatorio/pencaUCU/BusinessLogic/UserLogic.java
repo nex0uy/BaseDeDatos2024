@@ -53,4 +53,9 @@ public class UserLogic {
         return predictionPoints + finalPredictionPoints;
     }
 
+
+    public String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
 }

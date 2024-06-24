@@ -3,11 +3,9 @@ package com.obligatorio.pencaUCU.Controllers;
 import com.obligatorio.pencaUCU.BusinessLogic.PredictionLogic;
 import com.obligatorio.pencaUCU.Dtos.PredictionDTO;
 import com.obligatorio.pencaUCU.Models.Prediction;
-import com.obligatorio.pencaUCU.Security.AuthorizationChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,9 +17,6 @@ public class PredictionController {
 
     @Autowired
     private PredictionLogic predictionLogic;
-
-    @Autowired
-    private AuthorizationChecker authorizationChecker;
 
     @PostMapping
     public ResponseEntity<String> createPrediction(@RequestBody PredictionDTO predictionDTO) {
@@ -41,9 +36,6 @@ public class PredictionController {
     @GetMapping("/{id}")
     public ResponseEntity<PredictionDTO> getPredictionById(@PathVariable int id) {
         Prediction prediction = predictionLogic.getPredictionById(id);
-        if (!authorizationChecker.checkUserAccess(prediction.getUserId())) {
-            throw new AccessDeniedException("Acceso Denegado");
-        }
         PredictionDTO predictionDTO = new PredictionDTO(prediction);
         return ResponseEntity.ok(predictionDTO);
     }
@@ -64,9 +56,6 @@ public class PredictionController {
                     predictionDTO.getTeamOneScore(),
                     predictionDTO.getTeamTwoScore());
             prediction.setId(id);
-            if (!authorizationChecker.checkUserAccess(prediction.getUserId())) {
-                throw new AccessDeniedException("Acceso Denegado");
-            }
             predictionLogic.updatePrediction(prediction);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
@@ -76,10 +65,7 @@ public class PredictionController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePrediction(@PathVariable int id) {
-        Prediction prediction = predictionLogic.getPredictionById(id);
-        if (!authorizationChecker.checkUserAccess(prediction.getUserId())) {
-            throw new AccessDeniedException("Acceso Denegado");
-        }
+        //Prediction prediction = predictionLogic.getPredictionById(id);
         predictionLogic.deletePrediction(id);
         return ResponseEntity.ok().build();
     }

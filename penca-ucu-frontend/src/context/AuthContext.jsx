@@ -1,26 +1,33 @@
-import React, { createContext, useContext, useState } from 'react';
-import { login as loginService, register as registerService } from '../services/authService';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { login as loginService, register as registerService, getCurrentUser } from '../services/authService';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const login = async (email, password) => {
+  useEffect(() => {
+    const storedUser = getCurrentUser();
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
+
+  const login = useCallback(async (email, password) => {
     const userData = await loginService(email, password);
     setUser(userData);
-  };
+  }, []);
 
-  const register = async (name, email, password, career) => {
+  const register = useCallback(async (name, email, password, career) => {
     const userData = await registerService(name, email, password, career);
     setUser(userData);
-    return userData; // Asegúrate de devolver la respuesta aquí
-  };
+    return userData;
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem('user');
-  };
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, register, logout }}>
@@ -32,3 +39,5 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   return useContext(AuthContext);
 };
+
+export default AuthContext;

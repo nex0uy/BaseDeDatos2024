@@ -2,14 +2,14 @@ package com.obligatorio.pencaUCU.Controllers;
 
 import com.obligatorio.pencaUCU.BusinessLogic.UserLogic;
 import com.obligatorio.pencaUCU.Models.User;
-import com.obligatorio.pencaUCU.Security.JwtUtil;
-
-import java.util.List;
-import java.util.Map;
-
+import com.obligatorio.pencaUCU.Security.JWTAuthenticationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -20,25 +20,29 @@ public class UserController {
     private UserLogic userLogic;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JWTAuthenticationConfig jwtAuthenticationConfig;
 
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> loginUser(@RequestBody User loginRequest) {
-        User user = userLogic.findUserByEmail(loginRequest.getEmail());
-        if (user != null && userLogic.passwordMatches(loginRequest.getPassword(), user.getPassword())) {
-            String token = jwtUtil.generateToken(user.getEmail());
-            return ResponseEntity.ok(Map.of("token", token));
-        } else {
-            return ResponseEntity.status(401).body(Map.of("error", "Email o password invalidos!"));
-        }
+@PostMapping("/login")
+public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User loginRequest) {
+    User user = userLogic.findUserByEmail(loginRequest.getEmail());
+    if (user != null && userLogic.passwordMatches(loginRequest.getPassword(), user.getPassword())) {
+        String token = jwtAuthenticationConfig.getJWTToken(user.getEmail());
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", user);
+        return ResponseEntity.ok(response);
+    } else {
+        return ResponseEntity.status(401).body(Map.of("error", "Email o password invalidos!"));
     }
+}
 
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> registerUser(@RequestBody User user) {
         user.setRoleId(1); // Asumiendo que el rol USER tiene el id 1
+        user.setPassword(userLogic.encodePassword(user.getPassword())); // Encriptar la contraseña
         userLogic.saveUser(user);
-  
+
         User savedUser = userLogic.findUserByEmail(user.getEmail());
         Map<String, Object> response = Map.of(
             "message", "Usuario registrado con exito!",
@@ -46,6 +50,7 @@ public class UserController {
         );
         return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
@@ -62,5 +67,4 @@ public class UserController {
         int points = userLogic.calculateTotalPointsByUserId(userId);
         return ResponseEntity.ok(Map.of("userId", userId, "points", points));
     }
-
 }

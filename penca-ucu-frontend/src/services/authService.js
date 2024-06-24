@@ -6,9 +6,10 @@ export const login = async (email, password) => {
   try {
     const response = await axios.post(`${API_URL}/users/login`, { email, password });
     if (response.data.token) {
-      localStorage.setItem('user', JSON.stringify(response.data));
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      return response.data.user;
     }
-    return response.data;
   } catch (error) {
     throw new Error('Invalid email or password');
   }
@@ -17,22 +18,26 @@ export const login = async (email, password) => {
 export const register = async (name, email, password, career) => {
   try {
     const userData = { name, email, password, career };
-    console.log('Sending user data:', userData);
     const response = await axios.post(`${API_URL}/users/register`, userData);
-    console.log('Received response:', response.data);
-    if (response.data.userId) {
-      localStorage.setItem('user', JSON.stringify({ id: response.data.userId, email }));
+    console.log(response.data); // Agrega un log para verificar la respuesta del backend
+    if (response.data && response.data.userId) {
+      localStorage.setItem('user', JSON.stringify(response.data));
+      return response.data;
+    } else {
+      throw new Error('Unexpected response format');
     }
-    return response.data; // Asegúrate de devolver la respuesta aquí
   } catch (error) {
+    console.error('Error en el registro:', error); // Agrega un log para errores
     throw new Error('Registration failed');
   }
 };
 
 export const logout = () => {
+  localStorage.removeItem('token');
   localStorage.removeItem('user');
 };
 
 export const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem('user'));
+  const user = localStorage.getItem('user');
+  return user ? JSON.parse(user) : null;
 };

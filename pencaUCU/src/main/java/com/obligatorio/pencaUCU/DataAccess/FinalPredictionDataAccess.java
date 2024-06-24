@@ -2,6 +2,7 @@ package com.obligatorio.pencaUCU.DataAccess;
 
 import com.obligatorio.pencaUCU.Models.FinalPrediction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.NonNull;
@@ -30,7 +31,8 @@ public class FinalPredictionDataAccess {
     private final String SELECT_FINAL_PREDICTION_POINTS_BY_USER_SQL = "SELECT user_id, SUM(points) AS total_points " +
             "FROM final_predictions " +
             "GROUP BY user_id";
-        private final String CALCULATE_TOTAL_POINTS_BY_USER_SQL = "SELECT SUM(points) FROM final_predictions WHERE user_id = ?";
+    private final String CALCULATE_TOTAL_POINTS_BY_USER_SQL = "SELECT SUM(points) FROM final_predictions WHERE user_id = ?";
+    private final String SELECT_FINAL_PREDICTION_BY_USER_SQL = "SELECT * FROM final_predictions WHERE user_id = ?";
 
     
 
@@ -43,8 +45,21 @@ public class FinalPredictionDataAccess {
     }
 
     public FinalPrediction findById(int id) {
-        return jdbcTemplate.queryForObject(SELECT_FINAL_PREDICTION_SQL, new FinalPredictionRowMapper(), id);
+        try {
+            return jdbcTemplate.queryForObject(SELECT_FINAL_PREDICTION_SQL, new FinalPredictionRowMapper(), id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
+
+    public FinalPrediction findByUserId(int userId) {
+        try {
+            return jdbcTemplate.queryForObject(SELECT_FINAL_PREDICTION_BY_USER_SQL, new FinalPredictionRowMapper(), userId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }    
+
 
     public List<FinalPrediction> findAll() {
         return jdbcTemplate.query(SELECT_ALL_FINAL_PREDICTIONS_SQL, new FinalPredictionRowMapper());
