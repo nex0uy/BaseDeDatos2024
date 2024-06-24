@@ -1,38 +1,13 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { fetchTeams } from '../services/teamService';
-import { fetchMatches } from '../services/matchService';
 import { Box, Button, Container, Grid, Typography, Card, CardContent } from '@mui/material';
 import { red, green } from '@mui/material/colors';
+import { usePredictions } from '../hooks/usePredictions';
+import PredictionForm from '../components/PredictionForm';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
-  const [matches, setMatches] = useState([]);
-  const [teams, setTeams] = useState({});
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    const fetchAllData = async () => {
-      try {
-        const teamsData = await fetchTeams();
-        const teamsMap = teamsData.reduce((acc, team) => {
-          acc[team.id] = team.name;
-          return acc;
-        }, {});
-        setTeams(teamsMap);
-
-        const matchesData = await fetchMatches();
-        setMatches(matchesData);
-      } catch (error) {
-        setError('Error fetching data. Please try again later.');
-      }
-    };
-    fetchAllData();
-  }, []);
-
-  const isMatchPlayed = (matchDate) => {
-    return new Date(matchDate) < new Date();
-  };
+  const { matches, teams, error, isMatchPlayed, handleSubmitPrediction } = usePredictions(user);
 
   return (
     <Container>
@@ -69,6 +44,9 @@ const Dashboard = () => {
                   <Typography variant="body2" style={{ color: isMatchPlayed(match.date) ? red[500] : green[500] }}>
                     {isMatchPlayed(match.date) ? 'Partido finalizado' : 'Sin jugar'}
                   </Typography>
+                  {!isMatchPlayed(match.date) && (
+                    <PredictionForm match={match} onSubmit={handleSubmitPrediction} />
+                  )}
                 </CardContent>
               </Card>
             </Grid>

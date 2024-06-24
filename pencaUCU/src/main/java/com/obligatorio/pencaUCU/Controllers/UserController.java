@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,16 +22,20 @@ public class UserController {
     @Autowired
     private JWTAuthenticationConfig jwtAuthenticationConfig;
 
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> loginUser(@RequestBody User loginRequest) {
-        User user = userLogic.findUserByEmail(loginRequest.getEmail());
-        if (user != null && userLogic.passwordMatches(loginRequest.getPassword(), user.getPassword())) {
-            String token = jwtAuthenticationConfig.getJWTToken(user.getEmail());
-            return ResponseEntity.ok(Map.of("token", token));
-        } else {
-            return ResponseEntity.status(401).body(Map.of("error", "Email o password invalidos!"));
-        }
+@PostMapping("/login")
+public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User loginRequest) {
+    User user = userLogic.findUserByEmail(loginRequest.getEmail());
+    if (user != null && userLogic.passwordMatches(loginRequest.getPassword(), user.getPassword())) {
+        String token = jwtAuthenticationConfig.getJWTToken(user.getEmail());
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", user);
+        return ResponseEntity.ok(response);
+    } else {
+        return ResponseEntity.status(401).body(Map.of("error", "Email o password invalidos!"));
     }
+}
+
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> registerUser(@RequestBody User user) {

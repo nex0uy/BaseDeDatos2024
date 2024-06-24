@@ -30,7 +30,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/users/login", "/api/users/register", "/api/teams", "/api/finalPredictions").permitAll()
                 .requestMatchers("/api/tournament/**").hasRole("ADMIN")
-                .requestMatchers("/api/matches").authenticated()
+                .requestMatchers("/api/matches","/api/predictions").authenticated()
                 .requestMatchers("/api/predictions/**").hasRole("USER")
                 .anyRequest().authenticated())
             .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)

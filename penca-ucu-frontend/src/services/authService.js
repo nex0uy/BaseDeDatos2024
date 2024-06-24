@@ -7,8 +7,8 @@ export const login = async (email, password) => {
     const response = await axios.post(`${API_URL}/users/login`, { email, password });
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data));
-      return response.data;
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      return response.data.user;
     }
   } catch (error) {
     throw new Error('Invalid email or password');
@@ -19,8 +19,8 @@ export const register = async (name, email, password, career) => {
   try {
     const userData = { name, email, password, career };
     const response = await axios.post(`${API_URL}/users/register`, userData);
-    localStorage.setItem('user', JSON.stringify(response.data));
-    return response.data;
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+    return response.data.user;
   } catch (error) {
     throw new Error('Registration failed');
   }
