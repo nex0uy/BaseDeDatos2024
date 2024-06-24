@@ -35,9 +35,24 @@ public class FinalPredictionController {
     @GetMapping("/{id}")
     public ResponseEntity<FinalPredictionDTO> getFinalPredictionById(@PathVariable int id) {
         FinalPrediction finalPrediction = finalPredictionLogic.getFinalPredictionById(id);
+        if (finalPrediction == null) {
+            return ResponseEntity.notFound().build();
+        }
         FinalPredictionDTO finalPredictionDTO = new FinalPredictionDTO(finalPrediction);
         return ResponseEntity.ok(finalPredictionDTO);
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<FinalPredictionDTO> getFinalPredictionByUserId(@PathVariable int userId) {
+        FinalPrediction finalPrediction = finalPredictionLogic.getFinalPredictionByUserId(userId);
+        if (finalPrediction == null) {
+            return ResponseEntity.notFound().build();
+        }
+        FinalPredictionDTO finalPredictionDTO = new FinalPredictionDTO(finalPrediction);
+        return ResponseEntity.ok(finalPredictionDTO);
+    }
+
+    
 
     @GetMapping
     public ResponseEntity<List<FinalPredictionDTO>> getAllFinalPredictions() {

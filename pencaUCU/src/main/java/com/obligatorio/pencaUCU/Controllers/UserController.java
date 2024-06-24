@@ -51,6 +51,7 @@ public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User loginRequ
         return ResponseEntity.ok(response);
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         return ResponseEntity.ok(userLogic.getUserById(id));

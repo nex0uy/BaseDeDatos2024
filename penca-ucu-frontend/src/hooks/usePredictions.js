@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { fetchTeams } from '../services/teamService';
 import { fetchMatches } from '../services/matchService';
 import { submitPrediction, fetchPredictionsByUser, updatePrediction } from '../services/predictionService';
+import { fetchFinalPredictionByUser } from '../services/finalPredictionService';
 
 export const usePredictions = (user) => {
   const [matches, setMatches] = useState([]);
   const [teams, setTeams] = useState({});
   const [predictions, setPredictions] = useState({});
+  const [finalPrediction, setFinalPrediction] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -31,6 +33,9 @@ export const usePredictions = (user) => {
         return acc;
       }, {});
       setPredictions(predictionsMap);
+
+      const finalPredictionData = await fetchFinalPredictionByUser(user.id);
+      setFinalPrediction(finalPredictionData);
     } catch (error) {
       setError('Error fetching data. Please try again later.');
     }
@@ -72,6 +77,7 @@ export const usePredictions = (user) => {
     matches,
     teams,
     predictions,
+    finalPrediction,
     error,
     isMatchPlayed,
     isPredictionDisabled,

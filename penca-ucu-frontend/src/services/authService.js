@@ -19,9 +19,15 @@ export const register = async (name, email, password, career) => {
   try {
     const userData = { name, email, password, career };
     const response = await axios.post(`${API_URL}/users/register`, userData);
-    localStorage.setItem('user', JSON.stringify(response.data.user));
-    return response.data.user;
+    console.log(response.data); // Agrega un log para verificar la respuesta del backend
+    if (response.data && response.data.userId) {
+      localStorage.setItem('user', JSON.stringify(response.data));
+      return response.data;
+    } else {
+      throw new Error('Unexpected response format');
+    }
   } catch (error) {
+    console.error('Error en el registro:', error); // Agrega un log para errores
     throw new Error('Registration failed');
   }
 };

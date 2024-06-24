@@ -1,17 +1,17 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Box, Button, Container, Grid, Typography, Card, CardContent } from '@mui/material';
+import { Box, Button, Container, Grid, Typography, Card, CardContent, Paper } from '@mui/material';
 import { red, green } from '@mui/material/colors';
 import { usePredictions } from '../hooks/usePredictions';
 import PredictionForm from '../components/PredictionForm';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
-  const { matches, teams, predictions, error, isMatchPlayed, isPredictionDisabled, handleSubmitPrediction } = usePredictions(user);
+  const { matches, teams, predictions, finalPrediction, error, isMatchPlayed, isPredictionDisabled, handleSubmitPrediction } = usePredictions(user);
 
   return (
     <Container>
-      <Box mt={4} mb={4}>
+      <Box mt={4} mb={4} textAlign="center">
         <Typography variant="h4" gutterBottom>
           Welcome, {user ? user.email : 'Guest'}
         </Typography>
@@ -19,6 +19,33 @@ const Dashboard = () => {
           Logout
         </Button>
       </Box>
+      {finalPrediction ? (
+        <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
+          <Typography variant="h5" gutterBottom>
+            Pronóstico Final
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            Ganador: {teams[finalPrediction.winningTeamId]}
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            Subcampeón: {teams[finalPrediction.runnerUpTeamId]}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            {finalPrediction.points !== undefined && finalPrediction.points > 0
+              ? `Puntos obtenidos: ${finalPrediction.points}`
+              : 'Puntos aún no obtenidos'}
+          </Typography>
+        </Paper>
+      ) : (
+        <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
+          <Typography variant="h5" gutterBottom>
+            Pronóstico Final
+          </Typography>
+          <Typography variant="body1">
+            Aún no has ingresado una predicción final
+          </Typography>
+        </Paper>
+      )}
       <Typography variant="h5" gutterBottom>
         Matches
       </Typography>
@@ -42,13 +69,34 @@ const Dashboard = () => {
                     Phase: {match.phase}
                   </Typography>
                   {!isMatchPlayed(match.date) ? (
-                    <Typography variant="body2" style={{ color: green[500] }}>
+                    <Typography variant="body2" style={{ color: isPredictionDisabled(match.date) ? red[500] : green[500] }}>
                       {isPredictionDisabled(match.date) ? 'No se puede ingresar predicción' : 'Se puede ingresar predicción'}
                     </Typography>
                   ) : (
-                    <Typography variant="body2" style={{ color: red[500] }}>
-                      Partido finalizado
-                    </Typography>
+                    <>
+                      <Typography variant="body2" style={{ color: red[500] }}>
+                        Partido en curso o finalizado
+                      </Typography>
+                      {predictions[match.id] ? (
+                        <>
+                          <Typography variant="body2" color="textSecondary">
+                            Resultado de tu predicción: {predictions[match.id].teamOneScore} - {predictions[match.id].teamTwoScore}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            Puntos obtenidos: {predictions[match.id].points !== undefined ? predictions[match.id].points : 0}
+                          </Typography>
+                        </>
+                      ) : (
+                        <>
+                          <Typography variant="body2" color="textSecondary">
+                            No se ingresó predicción
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            Puntos obtenidos: 0
+                          </Typography>
+                        </>
+                      )}
+                    </>
                   )}
                   {!isMatchPlayed(match.date) && (
                     <PredictionForm 
@@ -57,13 +105,6 @@ const Dashboard = () => {
                       existingPrediction={predictions[match.id]} 
                       isDisabled={isPredictionDisabled(match.date)} 
                     />
-                  )}
-                  {isMatchPlayed(match.date) && predictions[match.id] && (
-                    <Box mt={2}>
-                      <Typography variant="body1">
-                        Tu predicción: {predictions[match.id].teamOneScore} - {predictions[match.id].teamTwoScore}
-                      </Typography>
-                    </Box>
                   )}
                 </CardContent>
               </Card>

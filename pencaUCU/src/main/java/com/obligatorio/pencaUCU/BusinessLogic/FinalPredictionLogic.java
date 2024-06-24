@@ -23,6 +23,11 @@ public class FinalPredictionLogic {
     public FinalPrediction getFinalPredictionById(int id) {
         return finalPredictionDataAccess.findById(id);
     }
+    
+    public FinalPrediction getFinalPredictionByUserId(int userId) {
+        return finalPredictionDataAccess.findByUserId(userId);
+    }
+    
 
     public List<FinalPrediction> getAllFinalPredictions() {
         return finalPredictionDataAccess.findAll();

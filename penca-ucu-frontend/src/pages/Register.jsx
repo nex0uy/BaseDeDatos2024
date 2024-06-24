@@ -27,9 +27,13 @@ const Register = () => {
     e.preventDefault();
     try {
       const response = await register(name, email, password, career);
-      const user = { id: response.userId, email };
+      console.log(response); // Agrega un log para verificar la respuesta
 
-      if (user && user.id) {
+      // Verificar si response es correcto antes de usarlo
+      if (response && response.userId) {
+        const user = { id: response.userId, email };
+
+        // Intenta enviar la predicción final
         try {
           await axios.post('http://localhost:8080/api/finalPredictions', {
             userId: user.id,
@@ -40,11 +44,11 @@ const Register = () => {
           console.error('Error en la predicción final:', error);
           throw new Error('Predicción Final falló');
         }
+
+        navigate('/login');
       } else {
         throw new Error('Registro de usuario falló');
       }
-
-      navigate('/login');
     } catch (error) {
       console.error(error);
       alert('No fue posible realizar el registro');

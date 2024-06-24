@@ -51,13 +51,6 @@ const PredictionForm = ({ match, onSubmit, existingPrediction, isDisabled }) => 
       >
         {existingPrediction ? 'Modificar' : 'Ingresar'}
       </Button>
-      {existingPrediction && (
-        <Box mt={2}>
-          <Typography variant="body1">
-            Resultado de tu predicción: {existingPrediction.teamOneScore} - {existingPrediction.teamTwoScore}
-          </Typography>
-        </Box>
-      )}
     </form>
   );
 };
