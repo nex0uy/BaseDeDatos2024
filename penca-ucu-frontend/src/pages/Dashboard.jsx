@@ -7,7 +7,7 @@ import PredictionForm from '../components/PredictionForm';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
-  const { matches, teams, error, isMatchPlayed, handleSubmitPrediction } = usePredictions(user);
+  const { matches, teams, predictions, error, isMatchPlayed, isPredictionDisabled, handleSubmitPrediction } = usePredictions(user);
 
   return (
     <Container>
@@ -41,11 +41,29 @@ const Dashboard = () => {
                   <Typography variant="body2" color="textSecondary">
                     Phase: {match.phase}
                   </Typography>
-                  <Typography variant="body2" style={{ color: isMatchPlayed(match.date) ? red[500] : green[500] }}>
-                    {isMatchPlayed(match.date) ? 'Partido finalizado' : 'Sin jugar'}
-                  </Typography>
+                  {!isMatchPlayed(match.date) ? (
+                    <Typography variant="body2" style={{ color: green[500] }}>
+                      {isPredictionDisabled(match.date) ? 'No se puede ingresar predicción' : 'Se puede ingresar predicción'}
+                    </Typography>
+                  ) : (
+                    <Typography variant="body2" style={{ color: red[500] }}>
+                      Partido finalizado
+                    </Typography>
+                  )}
                   {!isMatchPlayed(match.date) && (
-                    <PredictionForm match={match} onSubmit={handleSubmitPrediction} />
+                    <PredictionForm 
+                      match={match} 
+                      onSubmit={handleSubmitPrediction} 
+                      existingPrediction={predictions[match.id]} 
+                      isDisabled={isPredictionDisabled(match.date)} 
+                    />
+                  )}
+                  {isMatchPlayed(match.date) && predictions[match.id] && (
+                    <Box mt={2}>
+                      <Typography variant="body1">
+                        Tu predicción: {predictions[match.id].teamOneScore} - {predictions[match.id].teamTwoScore}
+                      </Typography>
+                    </Box>
                   )}
                 </CardContent>
               </Card>
