@@ -1,14 +1,10 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import { AuthProvider, useAuth } from "./context/AuthContext";
-
-const PrivateRoute = ({ children }) => {
-  const { user } = useAuth();
-  return user ? children : <Navigate to="/login" />;
-};
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import PrivateRoute from './components/PrivateRoute';
+import { AuthProvider } from './context/AuthContext';
+import MainLayout from './components/MainLayout';
 
 const App = () => {
   return (
@@ -17,12 +13,11 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={<Login />} />
           <Route
-            path="/dashboard"
+            path="/*"
             element={
               <PrivateRoute>
-                <Dashboard />
+                <MainLayout />
               </PrivateRoute>
             }
           />
