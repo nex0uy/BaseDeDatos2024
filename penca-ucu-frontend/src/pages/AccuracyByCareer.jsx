@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Paper, List, ListItem, ListItemText, CircularProgress } from '@mui/material';
+import { Box, Typography, Paper, List, ListItem, ListItemText, CircularProgress, Card, CardContent, Divider } from '@mui/material';
 import { fetchAccuracyByCareer } from '../services/statisticsService';
+import { styled } from '@mui/material/styles';
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+}));
 
 const AccuracyByCareer = () => {
   const [data, setData] = useState([]);
@@ -13,7 +18,7 @@ const AccuracyByCareer = () => {
         const result = await fetchAccuracyByCareer();
         setData(result);
       } catch (error) {
-        setError('Error fetching data. Please try again later.');
+        setError('Error al obtener datos. Por favor intente nuevamente.');
       } finally {
         setLoading(false);
       }
@@ -24,7 +29,7 @@ const AccuracyByCareer = () => {
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
-        Accuracy by Career
+        Aciertos por Carrera
       </Typography>
       {loading ? (
         <CircularProgress />
@@ -33,13 +38,18 @@ const AccuracyByCareer = () => {
       ) : (
         <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
           <List>
-            {data.map((item) => (
-              <ListItem key={item.career}>
-                <ListItemText 
-                  primary={`${item.career}`} 
-                  secondary={`Accuracy: ${item.accuracyPercentage.toFixed(2)}%`} 
-                />
-              </ListItem>
+            {data.map((item, index) => (
+              <StyledCard key={item.career}>
+                <CardContent>
+                  <ListItem>
+                    <ListItemText 
+                      primary={`${item.career}`} 
+                      secondary={`Aciertos: ${item.accuracyPercentage.toFixed(2)}%`} 
+                    />
+                  </ListItem>
+                  {index < data.length - 1 && <Divider />}
+                </CardContent>
+              </StyledCard>
             ))}
           </List>
         </Paper>
