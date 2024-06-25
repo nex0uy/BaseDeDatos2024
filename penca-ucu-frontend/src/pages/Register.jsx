@@ -114,7 +114,8 @@ const Register = () => {
               value={career}
               onChange={(e) => setCareer(e.target.value)}
             />
-
+        <Box mt={2} mb={2}>
+        </Box>
             <FinalPrediction onPredictionChange={setFinalPrediction} />
 
             <Button

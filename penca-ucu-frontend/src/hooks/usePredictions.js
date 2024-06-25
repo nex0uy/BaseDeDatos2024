@@ -67,7 +67,7 @@ export const usePredictions = (user) => {
         });
       }
       alert('Prediction submitted successfully');
-      fetchAllData();  // Recargar los datos después de una modificación
+      fetchAllData(); 
     } catch (error) {
       alert('Failed to submit prediction: ' + error.message);
     }

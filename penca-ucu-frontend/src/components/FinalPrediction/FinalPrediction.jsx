@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, MenuItem, Typography } from '@mui/material';
+import { TextField, MenuItem, Typography, Box, Paper } from '@mui/material';
 import { fetchTeams } from '../../services/teamService';
 
 const FinalPrediction = ({ onPredictionChange }) => {
@@ -14,7 +14,7 @@ const FinalPrediction = ({ onPredictionChange }) => {
         const data = await fetchTeams();
         setTeams(data);
       } catch (error) {
-        setError('Error fetching teams. Please try again later.');
+        setError('Error al obtener equipos. Por favor intente nuevamente.');
       }
     };
     getTeams();
@@ -25,43 +25,45 @@ const FinalPrediction = ({ onPredictionChange }) => {
   }, [champion, runnerUp, onPredictionChange]);
 
   return (
-    <div>
-      {error && <Typography color="error">{error}</Typography>}
-      <TextField
-        select
-        label="Campeón"
-        value={champion}
-        onChange={(e) => setChampion(e.target.value)}
-        fullWidth
-        margin="normal"
-      >
-        <MenuItem value="">
-          <em>Seleccionar Equipo</em>
-        </MenuItem>
-        {teams.map((team) => (
-          <MenuItem key={team.id} value={team.id}>
-            {team.name}
+    <Box>
+      <Paper elevation={3} sx={{ padding: 2, marginBottom: 2 }}>
+        {error && <Typography color="error">{error}</Typography>}
+        <TextField
+          select
+          label="Campeón"
+          value={champion}
+          onChange={(e) => setChampion(e.target.value)}
+          fullWidth
+          margin="normal"
+        >
+          <MenuItem value="">
+            <em>Seleccionar Equipo</em>
           </MenuItem>
-        ))}
-      </TextField>
-      <TextField
-        select
-        label="Subcampeón"
-        value={runnerUp}
-        onChange={(e) => setRunnerUp(e.target.value)}
-        fullWidth
-        margin="normal"
-      >
-        <MenuItem value="">
-          <em>Seleccionar Equipo</em>
-        </MenuItem>
-        {teams.map((team) => (
-          <MenuItem key={team.id} value={team.id}>
-            {team.name}
+          {teams.map((team) => (
+            <MenuItem key={team.id} value={team.id}>
+              {team.name}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          select
+          label="Subcampeón"
+          value={runnerUp}
+          onChange={(e) => setRunnerUp(e.target.value)}
+          fullWidth
+          margin="normal"
+        >
+          <MenuItem value="">
+            <em>Seleccionar Equipo</em>
           </MenuItem>
-        ))}
-      </TextField>
-    </div>
+          {teams.map((team) => (
+            <MenuItem key={team.id} value={team.id}>
+              {team.name}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Paper>
+    </Box>
   );
 };
 
