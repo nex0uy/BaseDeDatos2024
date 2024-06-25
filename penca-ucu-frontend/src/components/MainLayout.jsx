@@ -10,13 +10,13 @@ import AccuracyByCareer from '../pages/AccuracyByCareer';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const CustomAppBar = styled(AppBar)({
-  backgroundColor: '#333',
+  backgroundColor: '#1e88e5',
 });
 
 const CustomTab = styled(Tab)({
   color: '#fff',
   '&.Mui-selected': {
-    color: '#f50057',
+    color: '#ffeb3b',
   },
 });
 
@@ -61,16 +61,16 @@ const MainLayout = () => {
     >
       <List>
         <ListItem button component={Link} to="/dashboard" selected={value === '/dashboard'}>
-          <ListItemText primary="Dashboard" />
+          <ListItemText primary="Inicio" />
         </ListItem>
         <ListItem button component={Link} to="/participants" selected={value === '/participants'}>
-          <ListItemText primary="Participants" />
+          <ListItemText primary="Participantes" />
         </ListItem>
         <ListItem button component={Link} to="/fixture" selected={value === '/fixture'}>
           <ListItemText primary="Fixture" />
         </ListItem>
         <ListItem button component={Link} to="/accuracy-by-career" selected={value === '/accuracy-by-career'}>
-          <ListItemText primary="Accuracy by Career" />
+          <ListItemText primary="Aciertos por Carrera" />
         </ListItem>
       </List>
     </Box>
@@ -108,10 +108,10 @@ const MainLayout = () => {
               indicatorColor="secondary"
               textColor="inherit"
             >
-              <CustomTab label="Dashboard" value="/dashboard" component={Link} to="/dashboard" />
-              <CustomTab label="Participants" value="/participants" component={Link} to="/participants" />
+              <CustomTab label="Inicio" value="/dashboard" component={Link} to="/dashboard" />
+              <CustomTab label="Participantes" value="/participants" component={Link} to="/participants" />
               <CustomTab label="Fixture" value="/fixture" component={Link} to="/fixture" />
-              <CustomTab label="Accuracy by Career" value="/accuracy-by-career" component={Link} to="/accuracy-by-career" />
+              <CustomTab label="Aciertos por Carrera" value="/accuracy-by-career" component={Link} to="/accuracy-by-career" />
             </Tabs>
           )}
         </CustomToolbar>

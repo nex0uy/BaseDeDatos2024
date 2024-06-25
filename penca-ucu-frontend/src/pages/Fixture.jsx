@@ -23,13 +23,13 @@ const Fixture = () => {
         }, {});
         const mappedMatches = matchesData.map(match => ({
           ...match,
-          teamOneName: teamsMap[match.teamOneId] || 'Team One',
-          teamTwoName: teamsMap[match.teamTwoId] || 'Team Two'
+          teamOneName: teamsMap[match.teamOneId] || 'Equipo Uno',
+          teamTwoName: teamsMap[match.teamTwoId] || 'Equipo Dos'
         }));
         setTeams(teamsMap);
         setMatches(mappedMatches);
       } catch (error) {
-        setError('Error fetching data. Please try again later.');
+        setError('Error al obtener datos. Por favor intente nuevamente.');
       }
     };
     getData();
@@ -49,7 +49,7 @@ const Fixture = () => {
                 <ListItem>
                   <ListItemText 
                     primary={`${match.teamOneName} vs ${match.teamTwoName}`} 
-                    secondary={`Date: ${new Date(match.date).toLocaleString()}`} 
+                    secondary={`Fecha: ${new Date(match.date).toLocaleString()}`} 
                   />
                 </ListItem>
                 {index < matches.length - 1 && <Divider />}
