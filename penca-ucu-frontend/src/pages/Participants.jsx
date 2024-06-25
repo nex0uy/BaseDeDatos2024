@@ -17,7 +17,7 @@ const Participants = () => {
         const data = await fetchUserRanking();
         setParticipants(data);
       } catch (error) {
-        setError('Error al obtener participantes. Por favor intente nuevamente.');
+        setError('Error fetching participants. Please try again later.');
       }
     };
     getParticipants();
@@ -26,7 +26,7 @@ const Participants = () => {
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
-        Participantes
+        Participants
       </Typography>
       {error && <Typography color="error">{error}</Typography>}
       <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
@@ -42,7 +42,7 @@ const Participants = () => {
                   </ListItemAvatar>
                   <ListItemText 
                     primary={`${participant.userName}`}
-                    secondary={`Puntos: ${participant.totalPoints}`}
+                    secondary={`Points: ${participant.totalPoints}`}
                   />
                 </ListItem>
                 {index < participants.length - 1 && <Divider />}
