@@ -19,7 +19,7 @@ public class MatchController {
     private MatchLogic matchLogic;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> createMatch(@RequestBody MatchDTO matchDTO) {
         Match match = new Match(
                 matchDTO.getDate(),
@@ -45,7 +45,7 @@ public class MatchController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> updateMatch(@PathVariable int id, @RequestBody MatchDTO matchDTO) {
         Match match = new Match(
                 matchDTO.getDate(),
@@ -60,7 +60,7 @@ public class MatchController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteMatch(@PathVariable int id) {
         matchLogic.deleteMatch(id);
         return ResponseEntity.ok().build();

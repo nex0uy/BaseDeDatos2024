@@ -7,7 +7,9 @@ import Dashboard from '../pages/Dashboard';
 import Participants from '../pages/Participants';
 import Fixture from '../pages/Fixture';
 import AccuracyByCareer from '../pages/AccuracyByCareer';
+import AdminDashboard from '../pages/AdminDashboard';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useAuth } from '../context/AuthContext';
 
 const CustomAppBar = styled(AppBar)({
   backgroundColor: '#1e88e5',
@@ -36,6 +38,7 @@ const MainLayout = () => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const [value, setValue] = React.useState(currentPath);
+  const { user } = useAuth();
 
   React.useEffect(() => {
     setValue(currentPath);
@@ -72,6 +75,11 @@ const MainLayout = () => {
         <ListItem button component={Link} to="/accuracy-by-career" selected={value === '/accuracy-by-career'}>
           <ListItemText primary="Aciertos por Carrera" />
         </ListItem>
+        {user?.roleId === 2 && (
+          <ListItem button component={Link} to="/admin-dashboard" selected={value === '/admin-dashboard'}>
+            <ListItemText primary="Admin Dashboard" />
+          </ListItem>
+        )}
       </List>
     </Box>
   );
@@ -112,6 +120,9 @@ const MainLayout = () => {
               <CustomTab label="Participantes" value="/participants" component={Link} to="/participants" />
               <CustomTab label="Fixture" value="/fixture" component={Link} to="/fixture" />
               <CustomTab label="Aciertos por Carrera" value="/accuracy-by-career" component={Link} to="/accuracy-by-career" />
+              {user?.roleId === 2 && (
+                <CustomTab label="Admin Dashboard" value="/admin-dashboard" component={Link} to="/admin-dashboard" />
+              )}
             </Tabs>
           )}
         </CustomToolbar>
@@ -123,6 +134,7 @@ const MainLayout = () => {
             <Route path="/participants" element={<Participants />} />
             <Route path="/fixture" element={<Fixture />} />
             <Route path="/accuracy-by-career" element={<AccuracyByCareer />} />
+            {user?.roleId === 2 && <Route path="/admin-dashboard" element={<AdminDashboard />} />}
           </Routes>
         </Box>
       </Container>

@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback(async (email, password) => {
     const userData = await loginService(email, password);
     setUser(userData);
+    return userData;  // Return user data for further processing
   }, []);
 
   const register = useCallback(async (name, email, password, career) => {

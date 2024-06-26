@@ -29,9 +29,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/users/login", "/api/users/register", "/api/teams", "/api/finalPredictions").permitAll()
-                .requestMatchers("/api/tournament/**").hasRole("ADMIN")
-                .requestMatchers("/api/matches","/api/predictions").authenticated()
-                .requestMatchers("/api/predictions/**").hasRole("USER")
+                //.requestMatchers("/api/tournament/**").hasRole("ADMIN")
+                .requestMatchers("/api/matches/**","/api/predictions/**","/api/tournament/**").authenticated()
+                //.requestMatchers("/api/predictions/**").hasRole("USER")
                 .anyRequest().authenticated())
             .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()));
