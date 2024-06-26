@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, TextField, Button, List, ListItem, ListItemText, IconButton, MenuItem } from '@mui/material';
+import { Box, Typography, TextField, Button, List, ListItem, ListItemText, IconButton, MenuItem, Paper } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { fetchTeams, addTeam, deleteTeam, updateTeam } from '../services/teamService';
@@ -16,28 +16,29 @@ const TeamManagement = () => {
   const handleAddTeam = async () => {
     await addTeam(newTeamName);
     setNewTeamName('');
-    fetchTeams().then(setTeams); // Actualizar la lista de equipos
+    fetchTeams().then(setTeams);
   };
 
   const handleUpdateTeam = async () => {
     await updateTeam(editTeam.id, editTeam.name);
     setEditTeam(null);
-    fetchTeams().then(setTeams); // Actualizar la lista de equipos
+    fetchTeams().then(setTeams);
   };
 
   const handleDeleteTeam = async (id) => {
     await deleteTeam(id);
-    fetchTeams().then(setTeams); // Actualizar la lista de equipos
+    fetchTeams().then(setTeams);
   };
 
   return (
-    <Box mb={4}>
-      <Typography variant="h5">Equipos</Typography>
+    <Paper elevation={3} sx={{ p: 4 }}>
+      <Typography variant="h5" gutterBottom>Equipos</Typography>
       <Box display="flex" mb={2}>
         <TextField
           label="Nombre del equipo"
           value={editTeam ? editTeam.name : newTeamName}
           onChange={(e) => editTeam ? setEditTeam({ ...editTeam, name: e.target.value }) : setNewTeamName(e.target.value)}
+          fullWidth
         />
         <Button onClick={editTeam ? handleUpdateTeam : handleAddTeam} variant="contained" color="primary" sx={{ ml: 2 }}>
           {editTeam ? 'Actualizar' : 'Agregar'}
@@ -59,7 +60,7 @@ const TeamManagement = () => {
           </ListItem>
         ))}
       </List>
-    </Box>
+    </Paper>
   );
 };
 

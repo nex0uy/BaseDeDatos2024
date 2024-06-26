@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, TextField, Button, List, ListItem, ListItemText, IconButton, MenuItem } from '@mui/material';
+import { Box, Typography, TextField, Button, List, ListItem, ListItemText, IconButton, MenuItem, Paper } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -86,8 +86,8 @@ const MatchManagement = () => {
   };
 
   return (
-    <Box mb={4}>
-      <Typography variant="h5">Partidos</Typography>
+    <Paper elevation={3} sx={{ p: 4 }}>
+      <Typography variant="h5" gutterBottom>Partidos</Typography>
       <Box display="flex" flexDirection="column" mb={2}>
         <TextField
           label="Fecha"
@@ -246,7 +246,7 @@ const MatchManagement = () => {
           </ListItem>
         ))}
       </List>
-    </Box>
+    </Paper>
   );
 };
 

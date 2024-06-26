@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, TextField, Button, MenuItem } from '@mui/material';
+import { Box, Typography, TextField, Button, MenuItem, Paper } from '@mui/material';
 import { updateChampion } from '../services/tournamentService';
 import { fetchTeams } from '../services/teamService';
 
@@ -18,8 +18,8 @@ const ChampionUpdate = () => {
   };
 
   return (
-    <Box mb={4}>
-      <Typography variant="h5">Actualizar Campeón y Subcampeón</Typography>
+    <Paper elevation={3} sx={{ p: 4 }}>
+      <Typography variant="h5" gutterBottom>Actualizar Campeón y Subcampeón</Typography>
       <Box display="flex" flexDirection="column" mb={2}>
         <TextField
           select
@@ -47,9 +47,11 @@ const ChampionUpdate = () => {
             </MenuItem>
           ))}
         </TextField>
-        <Button onClick={handleUpdateChampion} variant="contained" color="primary">Actualizar</Button>
+        <Button onClick={handleUpdateChampion} variant="contained" color="primary">
+          Actualizar
+        </Button>
       </Box>
-    </Box>
+    </Paper>
   );
 };
 
