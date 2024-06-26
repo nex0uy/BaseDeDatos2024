@@ -77,9 +77,6 @@ const Login = () => {
             >
               Login
             </Button>
-            <MuiLink component={Link} to="/forgot-password" variant="body2">
-              Forgot password?
-            </MuiLink>
             <Typography variant="body2" align="center" sx={{ mt: 2 }}>
               ¿No tienes una cuenta? <MuiLink component={Link} to="/register">Regístrate aquí</MuiLink>
             </Typography>
