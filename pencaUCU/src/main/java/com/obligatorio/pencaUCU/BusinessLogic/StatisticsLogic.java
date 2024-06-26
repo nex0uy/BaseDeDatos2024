@@ -68,31 +68,34 @@ public class StatisticsLogic {
     public List<Map<String, Object>> getUserRanking() {
         // Obtener todos los usuarios
         List<User> users = userDataAccess.findAll();
-
+    
         // Obtener puntos de predicciones y predicciones finales
         List<Map<String, Object>> predictionPointsByUser = predictionDataAccess.findPredictionPointsByUser();
         List<Map<String, Object>> finalPredictionPointsByUser = finalPredictionDataAccess.findFinalPredictionPointsByUser();
-
+    
         // Combinar los resultados y calcular el ranking
-        return users.stream().map(user -> {
-            int userId = user.getId();
-            int totalPredictionPoints = predictionPointsByUser.stream()
-                    .filter(p -> ((Number) p.get("user_id")).intValue() == userId)
-                    .mapToInt(p -> ((Number) p.get("total_points")).intValue())
-                    .sum();
-            int totalFinalPoints = finalPredictionPointsByUser.stream()
-                    .filter(fp -> ((Number) fp.get("user_id")).intValue() == userId)
-                    .mapToInt(fp -> ((Number) fp.get("total_points")).intValue())
-                    .sum();
-
-            int totalPoints = totalPredictionPoints + totalFinalPoints;
-
-            return Map.<String, Object>of(
-                    "userId", userId,
-                    "userName", user.getName(),
-                    "totalPoints", totalPoints
-            );
-        }).sorted((a, b) -> Integer.compare((Integer) b.get("totalPoints"), (Integer) a.get("totalPoints")))
-        .collect(Collectors.toList());
+        return users.stream()
+            .filter(user -> user.getRoleId() != 2) // Filtrar usuarios con roleId 2
+            .map(user -> {
+                int userId = user.getId();
+                int totalPredictionPoints = predictionPointsByUser.stream()
+                        .filter(p -> ((Number) p.get("user_id")).intValue() == userId)
+                        .mapToInt(p -> ((Number) p.get("total_points")).intValue())
+                        .sum();
+                int totalFinalPoints = finalPredictionPointsByUser.stream()
+                        .filter(fp -> ((Number) fp.get("user_id")).intValue() == userId)
+                        .mapToInt(fp -> ((Number) fp.get("total_points")).intValue())
+                        .sum();
+    
+                int totalPoints = totalPredictionPoints + totalFinalPoints;
+    
+                return Map.<String, Object>of(
+                        "userId", userId,
+                        "userName", user.getName(),
+                        "totalPoints", totalPoints
+                );
+            }).sorted((a, b) -> Integer.compare((Integer) b.get("totalPoints"), (Integer) a.get("totalPoints")))
+            .collect(Collectors.toList());
     }
+    
 }

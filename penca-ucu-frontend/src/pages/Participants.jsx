@@ -15,7 +15,8 @@ const Participants = () => {
     const getParticipants = async () => {
       try {
         const data = await fetchUserRanking();
-        setParticipants(data);
+        const filteredData = data.filter(participant => participant.role !== 'admin');
+        setParticipants(filteredData);
       } catch (error) {
         setError('Error al obtener participantes. Por favor intente nuevamente.');
       }
