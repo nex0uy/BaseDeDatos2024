@@ -37,7 +37,7 @@ export const usePredictions = (user) => {
       const finalPredictionData = await fetchFinalPredictionByUser(user.id);
       setFinalPrediction(finalPredictionData);
     } catch (error) {
-      setError('Error fetching data. Please try again later.');
+      setError('Error!');
     }
   };
 
@@ -66,10 +66,10 @@ export const usePredictions = (user) => {
           teamTwoScore: parseInt(teamTwoScore, 10)
         });
       }
-      alert('Prediction submitted successfully');
+      alert('Prediccion agregada con exito!');
       fetchAllData(); 
     } catch (error) {
-      alert('Failed to submit prediction: ' + error.message);
+      alert('Error! ' + error.message);
     }
   };
 

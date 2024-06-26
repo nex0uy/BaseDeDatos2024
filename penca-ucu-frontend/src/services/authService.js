@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api'; // Ajusta la URL de tu API según sea necesario
+const API_URL = 'http://localhost:8080/api'; 
 
 export const login = async (email, password) => {
   try {
@@ -19,7 +19,7 @@ export const register = async (name, email, password, career) => {
   try {
     const userData = { name, email, password, career };
     const response = await axios.post(`${API_URL}/users/register`, userData);
-    console.log(response.data); // Agrega un log para verificar la respuesta del backend
+    console.log(response.data); 
     if (response.data && response.data.userId) {
       localStorage.setItem('user', JSON.stringify(response.data));
       return response.data;
@@ -27,7 +27,7 @@ export const register = async (name, email, password, career) => {
       throw new Error('Unexpected response format');
     }
   } catch (error) {
-    console.error('Error en el registro:', error); // Agrega un log para errores
+    console.error('Error en el registro:', error);
     throw new Error('Registration failed');
   }
 };

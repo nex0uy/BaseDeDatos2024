@@ -65,7 +65,6 @@ public class PredictionController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePrediction(@PathVariable int id) {
-        //Prediction prediction = predictionLogic.getPredictionById(id);
         predictionLogic.deletePrediction(id);
         return ResponseEntity.ok().build();
     }

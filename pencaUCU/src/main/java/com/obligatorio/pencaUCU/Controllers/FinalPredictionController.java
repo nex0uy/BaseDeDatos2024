@@ -52,8 +52,6 @@ public class FinalPredictionController {
         return ResponseEntity.ok(finalPredictionDTO);
     }
 
-    
-
     @GetMapping
     public ResponseEntity<List<FinalPredictionDTO>> getAllFinalPredictions() {
         List<FinalPrediction> finalPredictions = finalPredictionLogic.getAllFinalPredictions();

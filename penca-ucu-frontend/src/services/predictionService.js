@@ -5,7 +5,7 @@ export const fetchPredictionsByUser = async (userId) => {
     const response = await axiosInstance.get(`/predictions/user/${userId}`);
     return response.data;
   } catch (error) {
-    throw new Error('Error fetching predictions');
+    throw new Error('Error prediction!');
   }
 };
 
@@ -14,7 +14,7 @@ export const submitPrediction = async (prediction) => {
     const response = await axiosInstance.post('/predictions', prediction);
     return response.data;
   } catch (error) {
-    throw new Error('Error submitting prediction: ' + (error.response?.data?.message || error.message));
+    throw new Error('Error  prediction: ' + (error.response?.data?.message || error.message));
   }
 };
 
@@ -23,6 +23,6 @@ export const updatePrediction = async (id, prediction) => {
     const response = await axiosInstance.put(`/predictions/${id}`, prediction);
     return response.data;
   } catch (error) {
-    throw new Error('Error updating prediction: ' + (error.response?.data?.message || error.message));
+    throw new Error('Error  prediction: ' + (error.response?.data?.message || error.message));
   }
 };
