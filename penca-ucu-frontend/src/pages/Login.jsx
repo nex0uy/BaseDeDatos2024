@@ -38,7 +38,7 @@ const Login = () => {
         <CardContent>
           <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
             <Typography variant="h4" component="h1" gutterBottom>
-              Logo
+              PencaUCU
             </Typography>
           </Box>
           <Typography variant="h5" component="h2" gutterBottom>
